@@ -1,7 +1,7 @@
 import sympy as sp
-from .manifold import RiemmanianManifold
+from .manifold import RiemannianManifold
 
-class Surface(RiemmanianManifold):
+class Surface(RiemannianManifold):
     def __init__(self, embedded_expr: sp.Matrix, surface_vars=sp.Matrix):
         """
         embedded_expr: r(u,v) in R^3

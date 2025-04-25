@@ -1,5 +1,5 @@
+from __future__ import annotations
 import sympy as sp
-from .manifold import RiemmanianManifold
 
 class Curve:
     def __init__(self, curve_expr: sp.Matrix, parameter: sp.Symbol):
@@ -9,9 +9,16 @@ class Curve:
         """
         self.expr = curve_expr
         self.parameter = parameter
-        self.dim = 1  # It's a curve
 
-    def length(self, interval: tuple, manifold: RiemmanianManifold):
+        self.derivative = self._compute_prime()
+
+    def _compute_prime(self):
+        """
+        Compute the derivative of the curve with respect to the parameter.
+        """
+        return self.expr.diff(self.parameter)
+
+    def length(self, interval: tuple, manifold: "RiemannianManifold"):
         """
         Compute ∫ sqrt( (dγ/dt)^T * G(γ(t)) * (dγ/dt) ) dt 
         from t0 to t1, if manifold has a metric.
@@ -27,3 +34,9 @@ class Curve:
         
         integrand = sp.sqrt((dgamma_dt.T * G_sub * dgamma_dt)[0, 0])
         return sp.integrate(integrand, (self.parameter, t0, t1))
+    
+    
+    def is_geodesic(self, space: "RiemannianManifold") -> bool:
+        acceleration = space.acceleration_vector(curve=self)
+        return all(a == 0 for a in acceleration)
+    
