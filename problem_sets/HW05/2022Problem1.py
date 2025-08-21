@@ -28,7 +28,7 @@ print(space.christoffels)
 # Show curve (gamma(s) = (s, alpha) is a geodesic for all alpha)
 alpha = sp.symbols('alpha', real=True)
 s = sp.symbols('s', real=True)
-gamma = dg.Curve(curve_expr = sp.Matrix([s, alpha]), parameter=s)
+gamma = dg.Curve(curve_expr = sp.Matrix([s, alpha]), parameter=s, manifold=space)
 
 print(gamma.is_geodesic(space)) 
 
@@ -36,7 +36,7 @@ print(gamma.is_geodesic(space))
 # Reparameters mu to become arc length parameterised (eta)
 beta = sp.symbols('beta', real=True)
 t = sp.symbols('t', real=True)
-mu_beta = dg.Curve(curve_expr=sp.Matrix([beta, t]), parameter=t)
+mu_beta = dg.Curve(curve_expr=sp.Matrix([beta, t]), parameter=t, manifold=space)
 
 mu_speed = sp.sqrt(space.metric_tensor(V=mu_beta.derivative,
                                W=mu_beta.derivative,
@@ -48,7 +48,7 @@ print(mu_speed) #beta**2 + k**2
 # s = (beta**2 + k**2) * t
 # then t = s / (beta**2 + k**2)
 s = sp.symbols('s', real=True)
-eta = dg.Curve(curve_expr=sp.Matrix([beta, s/sp.sqrt((beta**2 + k**2))]), parameter=s)
+eta = dg.Curve(curve_expr=sp.Matrix([beta, s/sp.sqrt((beta**2 + k**2))]), parameter=s, manifold=space)
 eta_speed = space.metric_tensor(V=eta.derivative,
                                 W=eta.derivative,
                                 metric=space.metric.subs({
@@ -100,7 +100,7 @@ print(R1221) #-1.0*k**2/(k**2 + x1**2)
 
 # ----- 1.12 ----- #'
 #Find the sectional curvature function K for gk
-K = space.sectional_curvature(X=sp.Matrix([1, 0]), Y=sp.Matrix([0, 1]), R=R1221)
+K = space.sectional_curvature(X=sp.Matrix([1, 0]), Y=sp.Matrix([0, 1]))
 print(K) #1.0*k**2/(k**2 + x1**2)**2
 
 # ----- 1.13 ----- #

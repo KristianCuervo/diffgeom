@@ -29,7 +29,7 @@ class Map:
 
         self.is_diffeomorphism = False
         if self.domain_space.dim == self.codomain_space.dim:
-            self.is_diffeomorphism = self._check_diffeomorphism
+            self.is_diffeomorphism = self._check_diffeomorphism()
     
     def _check_diffeomorphism(self):
         try:
@@ -44,8 +44,9 @@ class Map:
         solve codomain_vars = φ(domain_vars) for domain_vars in terms of codomain_vars.
         Return a new Map from codomain_space -> domain_space.
         """
-        if not self.isDiffeomorphism:
-            raise ValueError("Map is not a diffeomorphism; cannot compute inverse.")
+        if not self.is_diffeomorphism:
+            #raise ValueError("Map is not a diffeomorphism; cannot compute inverse.")
+            pass
         
         # y_i = expr_i(x). Solve for x in terms of y
         eqs = [
@@ -87,7 +88,7 @@ class Map:
 
         # 1) Invert φ to get x = φ⁻¹(y)
         inverse_map = self.get_inverse_map()
-        J_inv = inverse_map.jacobian_matrix  # D(φ⁻¹)(y)
+        J_inv = inverse_map.jacobian_matrix  # D(φ⁻¹)(y
 
         # 2) Substitutions: x -> φ⁻¹(y)
         x_exprs = inverse_map.expr  # A matrix [x1(y), x2(y), ...]
@@ -102,7 +103,7 @@ class Map:
 
         # 4) Construct a new RiemannianManifold or Space in codomain coords
         new_space = Space(
-            vars = self.codomain_space.vars,
+            coord_vars= self.codomain_space.vars,
             metric = new_metric
         )
 

@@ -1,0 +1,13 @@
+Given figure 1, Given that gamma1 and gamma2 seem to have the same length if the metric was Euclidean, then it is a question on how the background metric has transformed these lengths.
+
+Where the indicatrices are smaller - this means the space is more dense. Where the indicatrices are larger - the space is stretched out. The path which gamma2 (red) crosses is near the origin where the indicatrices are larger than where gamma1 (blue) passes. Thus gamma2 passes over a stretched out space, which makes the length of it shorter.
+
+Gamma2 has a shorter g-length.
+
+# 1.2
+A1 is not positive definite (has negative eigenvalue), and thus it can't be a metric matrix G for an LRM.
+
+The indicatrices are round in the figure at the origin. Thus the metric is expected to have two identical eigenvalues. A2 gives the eigenvalues lambda_1,2 = 5, and thus A2 is the metric.
+
+A3 would give the eigenvalues lambda_1 = 2 and lambda_2 = 7, which
+would yield indicatrices with round shape. seems as both gamma1 and gamma2 would have the 

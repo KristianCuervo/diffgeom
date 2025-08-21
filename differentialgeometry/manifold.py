@@ -29,9 +29,35 @@ class RiemannianManifold:
         g(V, W) = V^T * metric * W
         """
         if metric is None:  
-            return (V.T * self.metric * W)[0, 0]
+            return (V.T * self.metric * W)
         else: 
-            return (V.T * metric * W)[0, 0]
+            return (V.T * metric * W)
+        
+    def old_indicatrix_function(self):
+        eigeninfo = self.metric.eigenvects()
+        vals = []
+        vecs = []
+        for lam, mult, vec in eigeninfo:
+            vals.append(lam)
+            vecs.append(vec[0].normalized())
+        
+        t = sp.symbols('t')
+        indicatrix = sp.simplify(((sp.cos(t)/sp.sqrt(vals[0]))*vecs[0] +
+                                  (sp.sin(t)/sp.sqrt(vals[1]))*vecs[1]))
+        
+        verify_indicatrix = sp.trigsimp(self.metric_tensor(V=indicatrix, W=indicatrix))
+        print(verify_indicatrix)
+
+        return indicatrix, t
+    
+    def find_indicatrix(self, point):
+        G_at_point = self.metric.subs({self.vars[i]: point[i] for i in range(self.dim)})
+        V = sp.Matrix([x for x in self.vars])
+        Ip = self.metric_tensor(V=V, W=V, metric=G_at_point)
+        t = sp.symbols('t')
+        polar = sp.Matrix([sp.cos(t), sp.sin(t)])
+        Ipt = Ip.subs({self.vars[i]: polar[i] for i in range(self.dim)})
+        return Ip, Ipt, t
     
     def _compute_christoffel_symbols(self):
         """
@@ -76,16 +102,19 @@ class RiemannianManifold:
         Compute the covariant derivative of a restricted vector
         field V(t) along a curve gamma(t) in the manifold.
         """
+        V = vector
+        gammaprime = curve.derivative
         covar = []
         for k in range(self.dim):
-            term = vector[k].diff(curve.parameter)
+            covar_i = 0
+            covar_i += V.diff(curve.parameter)[k]
             for i in range(self.dim):
                 for j in range(self.dim):
-                    term += (vector[j] * 
-                             curve.derivative[i] * 
+                    covar_i += (V[i] * 
+                             gammaprime[j] * 
                              self.christoffels[i, j, k].subs(
                                  {self.vars[i]: curve.expr[i] for i in range(self.dim)})) 
-            covar.append(term)
+            covar.append(sp.trigsimp(covar_i))
         return sp.Matrix(covar)
 
     def acceleration_vector(self, curve: Curve):
@@ -129,7 +158,7 @@ class RiemannianManifold:
 
         R = self.curvature_tensor(X=X, Y=Y, Z=Y, U=X)
         # Compute the sectional curvature
-        K = (R / area)
+        K = (R[0] / area[0])
         
         return K
     
@@ -163,3 +192,9 @@ class RiemannianManifold:
         """
         return None
     
+
+class EuclideanSpace(RiemannianManifold):
+    def __init__(n:int):
+        """
+        Creates a euclidean metric 
+        """
