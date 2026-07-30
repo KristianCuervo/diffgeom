@@ -55,7 +55,7 @@ U+ and V+
 """
 
 # 4.5 Get the metric matrix function as a function of y1, y2
-space_V_new = phi.fromUtoV()
+space_V_new = phi.pushforward_metric()
 print(space_V_new.metric)
 
 # 4.6 find the sectional curvature in V

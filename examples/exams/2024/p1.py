@@ -76,7 +76,7 @@ print(phi.expr)
 phi_inv = phi.get_inverse_map()
 print(phi_inv.expr)
 
-another_V = phi.fromUtoV()
+another_V = phi.pushforward_metric()
 print(sp.trigsimp(another_V.metric))
 
 # 3.9

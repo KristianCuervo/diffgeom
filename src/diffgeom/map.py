@@ -69,10 +69,10 @@ class Map:
             codomain_space=self.domain_space
         )
 
-    def fromUtoV(self):
+    def pushforward_metric(self):
         """
-        Suppose we want to define a new metric on the codomain
-        by pushing forward the domain metric under φ.
+        Define a new metric on the codomain by pushing the domain
+        metric forward under φ.
         1) Check we have a domain metric
         2) Invert the map φ (get φ⁻¹)
         3) Sub x=φ⁻¹(y) into domain_space.metric

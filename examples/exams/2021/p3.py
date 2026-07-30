@@ -35,7 +35,7 @@ space_u = dg.Space(metric=Gu,
 phi2 = dg.Map(expr=sp.Matrix([2*x1 + x2, x1 + x2]),
               domain_space=space_u,
               codomain_space=image_euclid)
-space_v = phi2.fromUtoV()
+space_v = phi2.pushforward_metric()
 print(space_v.metric)
 
 # 3.5 Find the parameterisation of the geodesics of U, in V.

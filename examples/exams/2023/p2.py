@@ -16,6 +16,6 @@ phi = dg.Map(expr=sp.Matrix([sp.sin(x1), x2]),
              domain_space=euclid2d, 
              codomain_space=dummy_space)
 
-space_V = phi.fromUtoV()
+space_V = phi.pushforward_metric()
 print(space_V.metric.subs({y1: x1,
                            y2: x2})) # Replace from dummy variables back to first variables
