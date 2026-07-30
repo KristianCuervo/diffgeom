@@ -126,11 +126,11 @@ the round sphere, the hyperbolic plane and flat space.
 
 ## Origin
 
-I wrote this while taking DTU course 01238 (Differential Geometry). The notation
-and the structure of the classes follow Steen Markvorsen's
-[*Differentialgeometri*](https://orbit.dtu.dk/en/publications/differentialgeometri-differential-geometry),
-the course text. The examples are the problem sets and past exam papers I worked
-through during the course, which is also why they double as the test suite.
+I wrote this while taking DTU course 01238 (Differential Geometry), taught by
+[Steen Markvorsen](http://www2.mat.dtu.dk/people/S.Markvorsen/). The notation and
+the structure of the classes follow the course material. The examples are the
+problem sets and past exam papers I worked through during the course, which is
+also why they double as the test suite.
 
 ## License
 
