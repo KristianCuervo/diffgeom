@@ -1,6 +1,18 @@
 import sympy as sp
 import numpy as np
-from .curve import Curve
+
+
+def _simplify(expr):
+    """
+    Simplify a curvature expression. Contractions routinely produce mixed
+    tan/sin/cos forms that sp.simplify alone leaves untouched, so rewrite
+    everything in terms of sin first.
+    """
+    expr = sp.sympify(expr)
+    try:
+        return sp.simplify(expr.rewrite(sp.sin))
+    except (AttributeError, TypeError, ValueError):
+        return sp.simplify(expr)
 
 
 class RiemannianManifold:
@@ -16,6 +28,10 @@ class RiemannianManifold:
         self.dim = len(vars)
         self.metric = metric
         self.metric_inv = None
+        if metric is None:
+            raise ValueError(
+                "A metric is required to compute the geometry of the manifold."
+            )
         if metric.det() != 0:
             self.metric_inv = self.metric.inv()
         
@@ -33,23 +49,6 @@ class RiemannianManifold:
         else: 
             return (V.T * metric * W)
         
-    def old_indicatrix_function(self):
-        eigeninfo = self.metric.eigenvects()
-        vals = []
-        vecs = []
-        for lam, mult, vec in eigeninfo:
-            vals.append(lam)
-            vecs.append(vec[0].normalized())
-        
-        t = sp.symbols('t')
-        indicatrix = sp.simplify(((sp.cos(t)/sp.sqrt(vals[0]))*vecs[0] +
-                                  (sp.sin(t)/sp.sqrt(vals[1]))*vecs[1]))
-        
-        verify_indicatrix = sp.trigsimp(self.metric_tensor(V=indicatrix, W=indicatrix))
-        print(verify_indicatrix)
-
-        return indicatrix, t
-    
     def find_indicatrix(self, point):
         G_at_point = self.metric.subs({self.vars[i]: point[i] for i in range(self.dim)})
         V = sp.Matrix([x for x in self.vars])
@@ -71,7 +70,7 @@ class RiemannianManifold:
                 for m in range(self.dim):
                     term = 0
                     for l in range(self.dim):
-                        term += 0.5 * (
+                        term += sp.Rational(1, 2) * (
                             self.metric[j, l].diff(self.vars[i]) +
                             self.metric[l, i].diff(self.vars[j]) -
                             self.metric[i, j].diff(self.vars[l])
@@ -95,33 +94,7 @@ class RiemannianManifold:
                         for s in range(self.dim):
                             term += chris[j, k, s]*chris[i, s, m] - chris[i, k, s]*chris[j, s, m]
                         R[i, j, k, m] = sp.simplify(term)
-        return R # Fixes sign convention
-    
-    def covariant_derivative(self, vector:sp.Matrix, curve: Curve):
-        """
-        Compute the covariant derivative of a restricted vector
-        field V(t) along a curve gamma(t) in the manifold.
-        """
-        V = vector
-        gammaprime = curve.derivative
-        covar = []
-        for k in range(self.dim):
-            covar_i = 0
-            covar_i += V.diff(curve.parameter)[k]
-            for i in range(self.dim):
-                for j in range(self.dim):
-                    covar_i += (V[i] * 
-                             gammaprime[j] * 
-                             self.christoffels[i, j, k].subs(
-                                 {self.vars[i]: curve.expr[i] for i in range(self.dim)})) 
-            covar.append(sp.trigsimp(covar_i))
-        return sp.Matrix(covar)
-
-    def acceleration_vector(self, curve: Curve):
-        """
-        Compute the acceleration vector of a curve in the manifold.
-        """
-        return self.covariant_derivative(curve.derivative, curve)
+        return R
     
     def curvature_operator(self, X:sp.Matrix, Y:sp.Matrix, Z:sp.Matrix):
         """
@@ -164,37 +137,46 @@ class RiemannianManifold:
     
     def scalar_curvature(self):
         """
-        Compute the scalar curvature of the manifold.
+        Compute the scalar curvature S = g^{jk} Ric_{kj}.
         """
+        ric = self.ricci_tensor()
         S = 0
         for j in range(self.dim):
             for k in range(self.dim):
-                for i in range(self.dim):
-                    for m in range(self.dim):
-                        S += self.riemanns[i, j, k, m] * self.metric_inv[i, m] * self.metric_inv[j, k]
-        return S  
-    
+                S += self.metric_inv[j, k] * ric[k, j]
+        return _simplify(S)
+
+
     def ricci_curvature(self, X:sp.Matrix, Y:sp.Matrix):
         """
-        Compute the Ricci curvature of the manifold.
+        Compute the Ricci curvature Ric(X, Y) = X^i Y^j Ric_{ij}.
         """
-        ric = 0
-        for i in range(self.dim):
-            for j in range(self.dim):
-                for k in range(self.dim):
-                    for m in range(self.dim):
-                        ric += X[i] * Y[j] * self.riemanns[i, j, k, m] * self.metric_inv[k, m]
-        return ric
-    
+        return (X.T * self.ricci_tensor() * Y)[0]
+
     def ricci_tensor(self):
         """
-        Compute the Ricci tensor of the manifold.
+        Compute the Ricci tensor Ric_{kj} = R^i_{kij} as a dim x dim
+        sympy Matrix, by contracting the upper index of the Riemann
+        tensor against its first lower index.
+
+        Note self.riemanns stores R[i, j, k, m] = R^m_{kij}, so the
+        contraction is over the first and last stored slots.
         """
-        return None
-    
+        ric = sp.zeros(self.dim, self.dim)
+        for k in range(self.dim):
+            for j in range(self.dim):
+                term = 0
+                for i in range(self.dim):
+                    term += self.riemanns[i, j, k, i]
+                ric[k, j] = _simplify(term)
+        return ric
+
 
 class EuclideanSpace(RiemannianManifold):
-    def __init__(n:int):
+    def __init__(self, n:int):
         """
-        Creates a euclidean metric 
+        The flat n-dimensional Euclidean space with coordinates x1..xn
+        and the identity metric.
         """
+        coord_vars = sp.Matrix(sp.symbols(f'x1:{n + 1}', real=True))
+        super().__init__(vars=coord_vars, metric=sp.eye(n))

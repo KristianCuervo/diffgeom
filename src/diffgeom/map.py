@@ -35,7 +35,7 @@ class Map:
         try:
             det_j = self.jacobian_matrix.det()
             return (det_j != 0)
-        except:
+        except (sp.SympifyError, sp.matrices.exceptions.NonSquareMatrixError, TypeError, ValueError):
             return False
     
     def get_inverse_map(self):
