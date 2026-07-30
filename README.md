@@ -2,15 +2,15 @@
 
 Symbolic Riemannian geometry in Python, built on [SymPy](https://www.sympy.org).
 
-Define a metric — or embed a surface and let the metric be induced — and the
-library computes the objects that follow from it exactly, in closed form:
-Christoffel symbols, the Riemann curvature tensor, sectional, Ricci and scalar
-curvature, covariant derivatives along curves, geodesics, and Killing fields.
-Nothing is evaluated numerically; every result comes back as a SymPy expression
-you can simplify, solve or differentiate further.
+You give it a metric, or you embed a surface and let it work out the induced
+metric. From there it computes Christoffel symbols, the Riemann curvature
+tensor, sectional, Ricci and scalar curvature, covariant derivatives along
+curves, geodesics and Killing fields. Everything stays symbolic. Results come
+back as SymPy expressions, so you can keep simplifying, solving or
+differentiating them.
 
-The API deliberately mirrors the notation of the theory, so a written exercise
-translates into code more or less line by line.
+The class and method names follow the notation used in the theory, which means
+a written exercise usually translates into code close to line by line.
 
 ## Install
 
@@ -24,8 +24,8 @@ Requires Python 3.10+, SymPy and NumPy.
 
 ## Example
 
-The unit sphere as a surface embedded in Euclidean R³ — its metric is inherited
-from the ambient space rather than written down by hand:
+The unit sphere, treated as a surface embedded in Euclidean R³. Its metric is
+inherited from the ambient space rather than written down by hand:
 
 ```python
 import sympy as sp
@@ -78,16 +78,21 @@ print(sphere.scalar_curvature())            # 2
 
 ### Classes
 
-- **`RiemannianManifold(vars, metric)`** — the base class. Christoffel symbols
-  and the Riemann tensor are computed once on construction and cached.
-- **`Space(metric, coord_vars)`** — a manifold given directly by its metric.
-- **`EuclideanSpace(n)`** — flat Rⁿ with the identity metric.
-- **`Surface(embedded_expr, surface_vars, ambient_space)`** — a surface embedded
-  in an ambient manifold; its metric is induced from the embedding.
-- **`Curve(curve_expr, parameter, manifold)`** — a parameterised curve.
-- **`Field(vector_field, space)`** and **`JacobiField(f_s, parameter)`** — vector
-  fields on a manifold.
-- **`Map(expr, domain_space, codomain_space)`** — a map between manifolds.
+**`RiemannianManifold(vars, metric)`** is the base class. It computes the
+Christoffel symbols and the Riemann tensor once on construction and caches them.
+
+**`Space(metric, coord_vars)`** is a manifold given directly by its metric, and
+**`EuclideanSpace(n)`** is flat Rⁿ with the identity metric.
+
+**`Surface(embedded_expr, surface_vars, ambient_space)`** is a surface embedded
+in an ambient manifold. Its metric is induced from the embedding.
+
+**`Curve(curve_expr, parameter, manifold)`** is a parameterised curve.
+
+**`Field(vector_field, space)`** and **`JacobiField(f_s, parameter)`** are vector
+fields on a manifold.
+
+**`Map(expr, domain_space, codomain_space)`** is a map between manifolds.
 
 ## Layout
 
@@ -100,8 +105,8 @@ notebooks/        walkthroughs
 tests/            runs every example end to end
 ```
 
-Every script under `examples/` is a self-contained solution to a real problem,
-with the reasoning written out in comments alongside the computation. They run
+Each script under `examples/` is a self-contained solution to a real problem,
+with the reasoning written out in comments next to the computation. They run
 as-is once the package is installed:
 
 ```bash
@@ -115,15 +120,18 @@ pip install -e ".[dev]"
 pytest
 ```
 
-The suite executes every example and asserts it completes without error, and
-checks the curvature routines against metrics with known closed-form answers
-(the round sphere, the hyperbolic plane, flat space).
+The suite runs every example and checks it completes without error. It also
+checks the curvature routines against metrics with known closed-form answers:
+the round sphere, the hyperbolic plane and flat space.
 
 ## Origin
 
-Written alongside DTU course 01238 (Differential Geometry). The examples are the
-problem sets and past exam papers worked through during the course.
+I wrote this while taking DTU course 01238 (Differential Geometry). The notation
+and the structure of the classes follow Steen Markvorsen's
+[*Differentialgeometri*](https://orbit.dtu.dk/en/publications/differentialgeometri-differential-geometry),
+the course text. The examples are the problem sets and past exam papers I worked
+through during the course, which is also why they double as the test suite.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).
