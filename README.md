@@ -101,8 +101,6 @@ src/diffgeom/     the library
 examples/
   textbook/       worked chapter exercises
   exams/          past exam papers, by year
-notebooks/        walkthroughs
-tests/            runs every example end to end
 ```
 
 Each script under `examples/` is a self-contained solution to a real problem,
@@ -113,24 +111,12 @@ as-is once the package is installed:
 python examples/exams/2024/p1.py
 ```
 
-## Tests
-
-```bash
-pip install -e ".[dev]"
-pytest
-```
-
-The suite runs every example and checks it completes without error. It also
-checks the curvature routines against metrics with known closed-form answers:
-the round sphere, the hyperbolic plane and flat space.
-
 ## Origin
 
 I wrote this while taking DTU course 01238 (Differential Geometry), taught by
 [Steen Markvorsen](http://www2.mat.dtu.dk/people/S.Markvorsen/). The notation and
 the structure of the classes follow the course material. The examples are the
-problem sets and past exam papers I worked through during the course, which is
-also why they double as the test suite.
+problem sets and past exam papers I worked through during the course.
 
 ## License
 

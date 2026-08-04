@@ -21,14 +21,8 @@ dependencies = [
     "numpy>=2.0",
 ]
 
-[project.optional-dependencies]
-dev = ["pytest>=8.0"]
-
 [project.urls]
 Repository = "https://github.com/KristianCuervo/differentialGeometry"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
