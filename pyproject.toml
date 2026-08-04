@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/KristianCuervo/differentialGeometry"
+Repository = "https://github.com/KristianCuervo/diffgeom"
 
 [tool.setuptools.packages.find]
 where = ["src"]

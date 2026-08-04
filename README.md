@@ -15,8 +15,8 @@ a written exercise usually translates into code close to line by line.
 ## Install
 
 ```bash
-git clone https://github.com/KristianCuervo/differentialGeometry.git
-cd differentialGeometry
+git clone https://github.com/KristianCuervo/diffgeom.git
+cd diffgeom
 pip install -e .
 ```
 
