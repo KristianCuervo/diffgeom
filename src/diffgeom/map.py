@@ -1,6 +1,5 @@
 import sympy as sp
 from .space import Space
-from .manifold import RiemannianManifold
 
 class Map:
     """
@@ -17,8 +16,8 @@ class Map:
     """
     def __init__(self, 
                  expr:sp.Matrix, 
-                 domain_space:RiemannianManifold, 
-                 codomain_space:RiemannianManifold):
+                 domain_space:Space,
+                 codomain_space:Space):
         
         # (codomain_vars) = expr(domain_vars)
         self.expr = expr 
@@ -101,7 +100,7 @@ class Map:
         # 3) G_V(y) = J_inv^T * domain_metric_in_y * J_inv
         new_metric = J_inv.T * domain_metric_in_y * J_inv
 
-        # 4) Construct a new RiemannianManifold or Space in codomain coords
+        # 4) Construct a new Space in codomain coords
         new_space = Space(
             coord_vars= self.codomain_space.vars,
             metric = new_metric

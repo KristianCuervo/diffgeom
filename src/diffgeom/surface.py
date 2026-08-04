@@ -1,8 +1,8 @@
 import sympy as sp
-from .manifold import RiemannianManifold
+from .space import Space
 
-class Surface(RiemannianManifold):
-    def __init__(self, embedded_expr: sp.Matrix, surface_vars=sp.Matrix, ambient_space=RiemannianManifold):
+class Surface(Space):
+    def __init__(self, embedded_expr: sp.Matrix, surface_vars: sp.Matrix, ambient_space: Space):
         """
         embedded_expr: r(x1, x2,...,xn) in R^N
         surface_vars: e.g x1, x2,...,xn
@@ -18,4 +18,4 @@ class Surface(RiemannianManifold):
 
         induced_metric = sp.simplify(ambient_space.metric_tensor(V=Jr, W=Jr, metric=G_sub))
 
-        super().__init__(metric=induced_metric, vars=surface_vars)
+        super().__init__(metric=induced_metric, coord_vars=surface_vars)

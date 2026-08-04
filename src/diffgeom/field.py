@@ -1,9 +1,9 @@
 import sympy as sp
-from .manifold import RiemannianManifold
+from .space import Space
 from .curve import Curve
 
 class Field:
-    def __init__(self, vector_field: sp.Matrix, space: RiemannianManifold):
+    def __init__(self, vector_field: sp.Matrix, space: Space):
         """
         vector_field: a matrix of vectors
         coord_vars: a matrix of coordinates

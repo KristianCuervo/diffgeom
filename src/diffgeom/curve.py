@@ -1,8 +1,8 @@
 import sympy as sp
-from .manifold import RiemannianManifold
+from .space import Space
 
 class Curve:
-    def __init__(self, curve_expr: sp.Matrix, parameter: sp.Symbol, manifold: RiemannianManifold):
+    def __init__(self, curve_expr: sp.Matrix, parameter: sp.Symbol, manifold: Space):
         """
         curve_expr: gamma(t), e.g. a vector in R^n
         parameter: the symbol t
@@ -15,7 +15,7 @@ class Curve:
         self.manifold = manifold
         self.speed = self._compute_prime(manifold)
 
-    def _compute_prime(self, manifold: RiemannianManifold):
+    def _compute_prime(self, manifold: Space):
         """
         Compute the derivative of the curve with respect to the parameter and g-metric.
         """
@@ -31,7 +31,7 @@ class Curve:
 
         return g_speed
 
-    def length(self, interval: tuple, manifold: RiemannianManifold):
+    def length(self, interval: tuple, manifold: Space):
         """
         Compute ∫ sqrt( (dγ/dt)^T * G(γ(t)) * (dγ/dt) ) dt 
         from t0 to t1, if manifold has a metric.

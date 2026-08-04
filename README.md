@@ -54,15 +54,15 @@ print(sphere.scalar_curvature())            # 2
 
 | Concept | Where |
 | --- | --- |
-| Metric tensor g(V, W) | `RiemannianManifold.metric_tensor(V, W)` |
-| Indicatrix at a point | `RiemannianManifold.find_indicatrix(point)` |
-| Christoffel symbols | `RiemannianManifold.christoffels[i, j, m]` |
-| Riemann curvature tensor | `RiemannianManifold.riemanns[i, j, k, m]` |
-| Curvature operator R(X, Y)Z | `RiemannianManifold.curvature_operator(X, Y, Z)` |
-| Curvature tensor R(X, Y, Z, U) | `RiemannianManifold.curvature_tensor(X, Y, Z, U)` |
-| Sectional curvature K(X, Y) | `RiemannianManifold.sectional_curvature(X, Y)` |
-| Ricci tensor and curvature | `RiemannianManifold.ricci_tensor()`, `.ricci_curvature(X, Y)` |
-| Scalar curvature | `RiemannianManifold.scalar_curvature()` |
+| Metric tensor g(V, W) | `Space.metric_tensor(V, W)` |
+| Indicatrix at a point | `Space.find_indicatrix(point)` |
+| Christoffel symbols | `Space.christoffels[i, j, m]` |
+| Riemann curvature tensor | `Space.riemanns[i, j, k, m]` |
+| Curvature operator R(X, Y)Z | `Space.curvature_operator(X, Y, Z)` |
+| Curvature tensor R(X, Y, Z, U) | `Space.curvature_tensor(X, Y, Z, U)` |
+| Sectional curvature K(X, Y) | `Space.sectional_curvature(X, Y)` |
+| Ricci tensor and curvature | `Space.ricci_tensor()`, `.ricci_curvature(X, Y)` |
+| Scalar curvature | `Space.scalar_curvature()` |
 | Induced metric on a surface | `Surface(...).metric` |
 | g-speed and g-length of a curve | `Curve.speed`, `Curve.length(interval, manifold)` |
 | Acceleration along a curve | `Curve.acceleration_vector()` |
@@ -78,10 +78,9 @@ print(sphere.scalar_curvature())            # 2
 
 ### Classes
 
-**`RiemannianManifold(vars, metric)`** is the base class. It computes the
-Christoffel symbols and the Riemann tensor once on construction and caches them.
-
-**`Space(metric, coord_vars)`** is a manifold given directly by its metric, and
+**`Space(metric, coord_vars)`** is a Riemannian manifold given directly by its
+metric, and the base class for the rest. It computes the Christoffel symbols and
+the Riemann tensor once on construction and caches them.
 **`EuclideanSpace(n)`** is flat Rⁿ with the identity metric.
 
 **`Surface(embedded_expr, surface_vars, ambient_space)`** is a surface embedded
